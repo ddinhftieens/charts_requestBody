@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <input type="text" id="userName" required>
+    <input type="password" id="passWord" required>
+    <button type="button" onclick="f()">Luu</button>
+    <select onchange="f1(this.value)">
+        <option selected hidden>Chon so</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+    </select>
+    <select onchange="changeImg(this.value)">
+        <option selected hidden>Chon hinh anh</option>
+        <option value="1569657392104">chien binh cau vong</option>
+        <option value="1569657298229">bat tre dong xanh</option>
+        <option value="1569680782283">nha gia kim</option>
+    </select>
+</div>
+<div>
+    <img src="/requestBody/image?ID=1569657298229" width="220" height="220" id="imagePage">
+</div>
+
+<!--$("button").click(function(){ 1569657298229  1569680782283-->
+<!--$("#w3s").attr("href", "https://www.w3schools.com/jquery/"); 1569657392104-->
+<!--});-->
+<script>
+    function f() {
+        alert("OK");
+        var user = document.getElementById("userName").value;
+        var pass = document.getElementById("passWord").value;
+        var jsonObject = {userName:user, passWord:pass};
+        alert(jsonObject);
+        var myObject = JSON.stringify(jsonObject);
+        alert(myObject);
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if(this.readyState == 4 && this.status == 200){
+                var myReveive = JSON.parse(this.responseText);
+                alert(myReveive.userName);
+            }
+        };
+        alert("1")
+        xmlhttp.open("POST","/requestBody/home",true);
+        xmlhttp.setRequestHeader("Content-type", "application/json");
+        xmlhttp.send(myObject);
+        alert("2");
+    }
+    function f1(value) {
+        var xml = new XMLHttpRequest();
+        xml.onreadystatechange = function () {
+            if(this.status == 200 && this.readyState == 4){
+                var myObject = JSON.parse(this.responseText);
+                alert(myObject);
+                alert(myObject[6]);
+                alert(myObject.length);
+            }
+        };
+        xml.open("GET","/requestBody/home/get?value="+value ,true);
+        xml.setRequestHeader("Content-type","application/json");
+        xml.send();
+    }
+    function changeImg(id) {
+        var http = new XMLHttpRequest();
+        http.onreadystatechange = function () {
+            if(this.status == 200 && this.readyState == 4){
+                var myObject = JSON.parse(this.responseText);
+                alert(myObject);
+                // document.getElementById("imagePage").innerHTML = '<input type="text" id="userName" required>';
+                $("#imagePage").attr("src","/requestBody/image?ID="+myObject);
+            }
+        };
+        http.open("GET","/requestBody/change/image?ID="+id ,true);
+        http.setRequestHeader("Content-type","application/json");
+        http.send();
+    }
+</script>
+</body>
+</html>
